@@ -1,0 +1,60 @@
+---
+title: "linreg"
+output: html_document
+---
+
+```{r}
+library(PBImisc)
+data(genomes)
+
+y=genomes$GC
+x=genomes$size
+
+s = function(x, y){
+  mean_x = mean(x)
+  mean_y = mean(y)
+  nom = sum((x - mean_x)*(y-mean_y))
+  denom = sum((x - mean_x)^2)
+  m = nom / denom
+  return(m)
+}
+
+s2 = function(x, y){
+  return(cov(x, y)/var(x))
+}
+
+intercept = function(x, y, m){
+  b = mean(y) - (m * mean(x))
+  return(b)
+}
+R2 = function(x,y){
+  x = cor(x,y)^2
+  return(x)
+  
+}
+
+
+my_size = s(x,y)
+my_intercept = intercept(x,y, my_size)
+my_R2 = R2(x,y)
+
+print('my_size:')
+my_size
+print('my_intercept:')
+my_intercept
+print('my_r2:')
+my_R2
+
+```
+
+```{r}
+library(PBImisc)
+data(genomes)
+write.csv(genomes,'genomes.csv')
+df = read.csv('genomes.csv')
+head(df)
+
+z = lm(df$GC ~ df$size)
+summary(z)
+```
+
